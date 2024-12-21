@@ -1,0 +1,627 @@
+@import url(https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap);
+
+body,
+.container {
+	transform: translate3d(0, 0, 0); /* Force GPU acceleration */
+	will-change: transform;
+}
+
+body {
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background: black;
+	overflow: hidden;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	--width: 500px;
+	--height: 500px;
+	--variable-length: 65000px;
+	--length: 65000px;
+	--half-length: calc(var(--length) / 2);
+}
+
+/* Controls */
+.controls {
+	margin-bottom: 20px;
+	color: white;
+	font-family: "Bebas Neue", sans-serif;
+	font-size: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: absolute;
+	z-index: 999;
+	top: 50px;
+}
+
+.range-slider {
+	width: 300px;
+}
+
+/* Cube container */
+.container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+	transform: scale(1);
+	transform-origin: center;
+}
+
+.cube {
+	perspective: 800px;
+	perspective-origin: 50% 50%;
+	position: relative;
+	width: var(--width);
+	height: var(--height);
+	transform-style: preserve-3d;
+	transition: transform 0.3s ease-out;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden; /* For compatibility */
+	will-change: transform;
+}
+
+.face {
+	position: absolute;
+	width: var(--width);
+	height: var(--height);
+	background: rgba(255, 255, 255, 1);
+	border: none;
+	display: flex;
+	align-items: center;
+	font-family: "Bebas Neue", sans-serif;
+	color: black;
+	will-change: transform;
+}
+
+.front {
+	transform: translateZ(calc(var(--length) - var(--variable-length)));
+	background-size: 500px;
+	background-blend-mode: difference;
+}
+
+.front.main {
+	transform: translateZ(calc(var(--length) - var(--variable-length)));
+	background-size: 500px;
+	background-color: rgba(255, 255, 255, 0.9);
+	opacity: 1; /* Initial state */
+	transition: opacity 5s ease-in-out; /* Smooth transition */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.front.main.hidden {
+	opacity: 0.6; /* Final state */
+}
+
+.back {
+	transform: translateZ(calc(-1 * var(--variable-length))) rotateY(180deg)
+		scale(-1, 1);
+	background: rgb(17, 17, 17);
+	background: linear-gradient(
+		0deg,
+		rgba(17, 17, 17, 1) 0%,
+		rgba(28, 28, 28, 1) 33%,
+		rgba(99, 99, 99, 1) 94%,
+		rgba(255, 255, 255, 1) 100%
+	);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.back .frame {
+	position: unset;
+}
+
+.left {
+	transform: translateZ(calc(var(--half-length) - var(--variable-length)))
+		translateX(calc(-1 * var(--half-length))) rotateY(-90deg) scale(-1, 1);
+	background: rgba(255, 255, 255, 1);
+	width: var(--length);
+	background: rgb(17, 17, 17);
+	background: linear-gradient(
+		0deg,
+		rgba(17, 17, 17, 1) 0%,
+		rgba(28, 28, 28, 1) 33%,
+		rgba(99, 99, 99, 1) 94%,
+		rgba(255, 255, 255, 1) 100%
+	);
+}
+
+.right {
+	transform: translateZ(calc(var(--half-length) - var(--variable-length)))
+		translateX(calc(-1 * (var(--half-length) - var(--width)))) rotateY(90deg)
+		scale(-1, 1);
+	background: rgba(255, 255, 0, 1);
+	width: var(--length);
+	background: rgb(17, 17, 17);
+	background: linear-gradient(
+		0deg,
+		rgba(17, 17, 17, 1) 0%,
+		rgba(28, 28, 28, 1) 33%,
+		rgba(99, 99, 99, 1) 94%,
+		rgba(255, 255, 255, 1) 100%
+	);
+}
+
+.top {
+	transform: translateZ(calc(var(--half-length) - var(--variable-length)))
+		translateY(calc(-1 * var(--half-length))) rotateX(90deg) scale(1, -1);
+	background: #1c1c1c;
+	height: var(--length);
+}
+
+.bottom {
+	transform: translateZ(calc(var(--half-length) - var(--variable-length)))
+		translateY(calc(-1 * (var(--half-length) - var(--height)))) rotateX(-90deg)
+		scale(1, -1);
+	background: url("https://upload.wikimedia.org/wikipedia/commons/3/31/Wood_pattern_parquet_floor_tiles.jpg");
+	background-size: 200px contain;
+	height: var(--length);
+	image-rendering: auto; /* Ensure smooth scaling */
+	will-change: transform; /* Optimize rendering for motion */
+}
+
+p {
+	font-size: 7em;
+	transform: translateZ(0);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	position: absolute;
+}
+
+.left p {
+	line-height: 1;
+	color: white;
+}
+
+.title {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: 2em;
+	color: white;
+	background: none;
+	margin-top: 20%;
+}
+
+.title p {
+	font-size: 3em;
+	text-align: center;
+	line-height: 0.7;
+}
+
+.face img {
+	image-rendering: auto; /* Ensure smooth scaling */
+	transform: translateZ(0); /* Trigger higher-quality rendering */
+	will-change: transform; /* Optimize rendering for motion */
+	backface-visibility: visible; /* Reduce rendering artifacts */
+	-webkit-backface-visibility: visible; /* For compatibility */
+}
+
+img.left-align {
+	object-position: left;
+}
+img.right-align {
+	object-position: right;
+}
+img.top-align {
+	object-position: top;
+}
+img.bottom-align {
+	object-position: bottom;
+}
+
+.cube,
+.face,
+.frame,
+p {
+	transform-style: preserve-3d; /* Ensure proper 3D rendering */
+	will-change: transform; /* Optimize for dynamic changes */
+}
+
+.archean {
+	transform: translateZ(calc((var(--length) * 0.99) - var(--variable-length)));
+}
+.cambrian {
+	transform: translateZ(
+		calc((var(--length) * 0.83076) - var(--variable-length))
+	);
+}
+.ordovician {
+	transform: translateZ(
+		calc((var(--length) * 0.74677) - var(--variable-length))
+	);
+}
+.silurian {
+	transform: translateZ(
+		calc((var(--length) * 0.68277) - var(--variable-length))
+	);
+}
+.devonian {
+	transform: translateZ(
+		calc((var(--length) * 0.64492) - var(--variable-length))
+	);
+}
+.carboniferous {
+	transform: translateZ(
+		calc((var(--length) * 0.55215) - var(--variable-length))
+	);
+}
+.permian {
+	transform: translateZ(
+		calc((var(--length) * 0.45985) - var(--variable-length))
+	);
+}
+.triassic {
+	transform: translateZ(
+		calc((var(--length) * 0.38679) - var(--variable-length))
+	);
+}
+.jurassic {
+	transform: translateZ(
+		calc((var(--length) * 0.30969) - var(--variable-length))
+	);
+}
+.cretaceous {
+	transform: translateZ(
+		calc((var(--length) * 0.22308) - var(--variable-length))
+	);
+}
+.paleogene {
+	transform: translateZ(
+		calc((var(--length) * 0.10154) - var(--variable-length))
+	);
+}
+.neogene {
+	transform: translateZ(
+		calc((var(--length) * 0.035384) - var(--variable-length))
+	);
+}
+.quaternary {
+	transform: translateZ(
+		calc((var(--length) * 0.003981) - var(--variable-length))
+	);
+}
+
+.frame {
+	position: absolute;
+	padding: 0;
+	margin: 0;
+	border: solid 10px #191919;
+	width: 300px;
+	height: 300px;
+	margin: 40px auto;
+	box-shadow: 0px 10px 10px #000;
+}
+.border {
+	width: 250px;
+	height: 250px;
+	position: relative;
+	padding: 0;
+	margin: 0;
+	border: solid 25px #f5f5f5;
+}
+img {
+	display: block;
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	border-top: solid 2px #aaa;
+	border-left: solid 2px #aaa;
+	border-bottom: solid 2px #ccc;
+	border-right: solid 2px #ccc;
+	object-fit: cover;
+	background: #ccc;
+}
+
+p.pro-01 {
+	left: 2%;
+}
+p.pro-02 {
+	left: 5%;
+}
+p.pro-03 {
+	left: 9%;
+}
+p.pro-04 {
+	left: 13%;
+}
+
+p.cam-01 {
+	left: 18%;
+}
+p.cam-02 {
+	left: 21.8%;
+}
+
+p.ord-01 {
+	left: 27%;
+}
+
+p.sil-01 {
+	left: 32.5%;
+}
+
+p.dev-01 {
+	left: 37%;
+}
+p.dev-02 {
+	left: 40%;
+}
+
+p.car-01 {
+	left: 46%;
+}
+p.car-02 {
+	left: 49%;
+}
+p.car-03 {
+	left: 52%;
+}
+
+p.per-01 {
+	left: 55%;
+}
+p.per-02 {
+	left: 57%;
+}
+
+p.tri-01 {
+	left: 63%;
+}
+p.tri-02 {
+	left: 65%;
+}
+
+p.jur-01 {
+	left: 70%;
+}
+p.jur-02 {
+	left: 74.5%;
+}
+
+p.cre-01 {
+	left: 79%;
+}
+p.cre-02 {
+	left: 81.5%;
+}
+p.cre-03 {
+	left: 87%;
+}
+
+p.pal-01 {
+	left: 91%;
+}
+p.neo-01 {
+	left: 97%;
+}
+
+.cyanobacteria {
+	right: 2.5%;
+}
+.algae {
+	right: 5.5%;
+}
+.sponge {
+	right: 9.5%;
+}
+.jellyfish {
+	right: 13.2%;
+}
+.trilobite {
+	right: 18.3%;
+}
+.anomalocaris {
+	right: 20%;
+}
+.haikouichthys {
+	right: 22%;
+}
+.endoceras {
+	right: 27.3%;
+}
+.aegirocassis {
+	right: 29%;
+}
+.cooksonia {
+	right: 33%;
+}
+.tiktaalik {
+	right: 38%;
+}
+.dunkleosteus {
+	right: 40%;
+}
+.bothriolepis {
+	right: 42%;
+}
+
+.carbonodraco {
+	right: 46%;
+}
+.petrolacosaurus {
+	right: 47%;
+}
+.spinoaequalis {
+	right: 48%;
+}
+.arthropleura {
+	right: 49%;
+}
+.lepidodendrales {
+	right: 50%;
+}
+.seed-fern {
+	right: 52.3%;
+}
+
+.dimetrodon {
+	right: 55%;
+}
+.pareiasaurus {
+	right: 57%;
+}
+.claudiosaurus {
+	right: 59%;
+}
+
+.staurikosaurus {
+	right: 62%;
+}
+.plateosaurus {
+	right: 63%;
+}
+.lystrosaurus {
+	right: 64%;
+}
+.tanystropheus {
+	right: 65%;
+}
+.morganucodon {
+	right: 66%;
+}
+.gobiconodon {
+	right: 67%;
+}
+
+.ankylosaurus {
+	right: 71%;
+}
+.pachyrhinosaurus {
+	right: 72%;
+}
+.suzhousaurus {
+	right: 73%;
+}
+.gigantoraptor {
+	right: 74%;
+}
+.archaeopteryx {
+	right: 75%;
+}
+
+.sagaria {
+	right: 80%;
+}
+.purgatorius {
+	right: 82%;
+}
+.ningchengopterus {
+	right: 84%;
+}
+.argentinosaurus {
+	right: 86%;
+}
+
+.moeritherium {
+	right: 91%;
+}
+.paraceratherium {
+	right: 93%;
+}
+
+.megatherium {
+	right: 97%;
+}
+.deinotherium {
+	right: 98%;
+}
+.daeodon {
+	right: 99%;
+}
+
+.border div {
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	font-size: 1.7em;
+	line-height: 1.2;
+	margin-top: 50px;
+	color: white;
+}
+
+#zRange {
+	display: none;
+}
+
+#zValue {
+	font-size: 3em;
+}
+
+.hidden {
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 1s ease; /* Smooth transition */
+}
+
+.visible {
+	opacity: 1;
+	pointer-events: auto;
+	transition: opacity 1s ease; /* Smooth transition */
+}
+
+small {
+	font-size: 0.6em;
+	margin-top: -100px;
+}
+
+.mouse-scroll {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+}
+
+.mouse {
+	width: 48px;
+	height: 80px;
+	border: 4px solid #000;
+	border-radius: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: start;
+}
+
+.arrow {
+	width: 10px;
+	height: 10px;
+	border-right: 2px solid #000;
+	border-bottom: 2px solid #000;
+	transform: rotate(225deg);
+}
+
+.wheel {
+	width: 8px;
+	height: 16px;
+	background-color: #000;
+	border-radius: 4px;
+	animation: scroll 1s infinite;
+	margin-top: 8px;
+}
+
+/* Scroll animation */
+@keyframes scroll {
+	0% {
+		transform: translateY(0);
+	}
+
+	50% {
+		transform: translateY(8px);
+	}
+
+	100% {
+		transform: translateY(0);
+	}
+}
